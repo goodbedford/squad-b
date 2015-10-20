@@ -25,15 +25,15 @@ app.get('/', function(req, res){
 });
 //POST
 app.post('/api/posts', function(req, res){
-  //var newPost = req.body;
-  var newPost = new db.Post(req.body);
-  newPost.save(function(err, post){
-    console.log("new post",post);
-    res.json(post);
-  });
-  // db.Post.create(newPost, function(err, post){
+  var newPost = req.body;
+  // var newPost = new db.Post(req.body);
+  // newPost.save(function(err, post){
+  //   console.log("new post",post);
   //   res.json(post);
   // });
+  db.Post.create(newPost, function(err, post){
+    res.json(post);
+  });
 });
 //DELETE
 app.delete('/api/posts/:id', function(req, res){
