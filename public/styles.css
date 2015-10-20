@@ -1,0 +1,41 @@
+
+
+
+/* fonts */
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+body{
+  font-family: 'Roboto', sans-serif;
+}
+
+/* colors */
+.prime-color { color: #666666;}
+.secondary-color { color: #408000;}
+.alt-color-01 { color: #00FF80;}
+.alt-color-02 { color: #FF0080;}
+.alt-color-03 { color: #008080;}
+.alt-color-03bg { background-color: #008080}
+.white{color:white;}
+
+
+
+.bdr-bottom{ border-bottom: 1px solid gray}
+
+.cursor{
+  cursor: pointer;
+}
+.icon-sizer-down{
+  font-size: 1.5em;
+  position: relative;
+  top: .15em;
+  left: .20em;
+}
+.icon-sizer-right{
+  font-size: 1.5em;
+  position: relative;
+  top: .15em;
+  left: .20em;
+}
+
+.pad-2px{ padding: 2px;}
+.post-author{ padding-right: 3px;}
+/*.fa{border: 1px solid red;}*/

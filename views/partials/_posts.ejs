@@ -1,0 +1,60 @@
+<div class="row">
+  <h1>Welcome Squad B</h1>
+  <h3>Resources to be our best</h3>
+</div>
+<div class="row">
+  <div>
+    <div id="form-toggle" class="alt-color-02 cursor"><span>Add New Post</span><span id="" class="icon-sizer-right form-toggle-right"><i class="fa fa-caret-right"></i></span></div>
+    <form id="post-form" action="/api/posts" method="POST" role="form" class="hidden">
+<!--       <legend>Add New Post</legend>
+ -->    
+      <div class="form-group">
+        <label for="">Title</label>
+        <input type="text" class="form-control" id="post-title" name="title" placeholder="Input Title" autofocus> 
+      </div>
+      <div class="form-group">
+        <label for="">Post</label>
+        <input type="text" class="form-control" id="post-content" name="content" placeholder="Input Post">
+      </div>
+      <div class="form-group">
+        <label for="">Author</label>
+        <input type="text" class="form-control" id="post-author" name="author" placeholder="Input Author">
+      </div> 
+      
+    
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
+<div class="row"><hr>
+      <div class="new-post-container"><span class="latest-post alt-color-03bg white pad-2px ">Latest Post</span>
+       <% for( var i = posts.length ; i > 0; i--){%>
+         <div data-index="post<%= posts[(i-1)]._id %>" class="bdr-bottom post">
+           <p class="secondary-color post-title"><%= posts[i-1].title %></p>
+           <p class="post-content"><%= posts[i-1].content %></p>
+           <p class="post-footer">
+            <small class="alt-color-02 post-author"><%= posts[i-1].author %></small>
+            <span data-index="<%= posts[(i-1)]._id %>" class="edit-post cursor pad-2px"><i class="fa fa-pencil"></i></span>
+            <span data-index="<%= posts[(i-1)]._id %>" class="delete-post cursor pad-2px"><i class="fa fa-trash-o"></i></span>
+           </p>
+          <!-- Edit Form --> 
+          <form data-index="post<%= posts[(i-1)]._id %>" action="/api/posts/:id" method="PUT" role="form" class="hidden edit-form">   
+               <div class="form-group">
+                 <label for="">Title</label>
+                 <input type="text" class="form-control edit-title" id="" name="title" placeholder="Input Title" autofocus> 
+               </div>
+               <div class="form-group">
+                 <label for="">Post</label>
+                 <input type="text" class="form-control edit-content" id="" name="content" placeholder="Input Post">
+               </div>
+               <div class="form-group">
+                 <label for="">Author</label>
+                 <input type="text" class="form-control edit-author" id="" name="author" placeholder="Input Author">
+               </div> 
+               <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+       </div>
+
+      <% } %>
+      </div>
+</div>
