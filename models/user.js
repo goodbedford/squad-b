@@ -6,7 +6,6 @@ var salt = bcrypt.genSaltSync(10);
 
 var Schema = mongoose.Schema;
 var UserSchema = new Schema({
-    title: {type: String, require: true},
     email: {type: String, require: true, unique: true },
     password: {type:String, require: true}
 });
