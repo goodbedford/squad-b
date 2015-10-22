@@ -44,7 +44,7 @@ UserSchema.statics.authenticate = function(email,password, callback){
 // compare password user enters with hadded password
 UserSchema.methods.checkPassword = function(password) {
   //run bcypt compare hash to user inputed password 
-  return bcypt.compareSync(password, this.password);
+  return bcrypt.compareSync(password, this.password);
 };
 
 var User = mongoose.model('User', UserSchema);

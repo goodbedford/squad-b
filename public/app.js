@@ -161,6 +161,22 @@ $(document).ready(function(){
         }
        });
     });
+    //Submit Signup form
+    // $('#signup-form').on('submit', function(e){
+    //   e.preventDefault();
+    //   console.log("signed up");
+    //   var newUser = $(this).serialize();
+    //   $.ajax({
+    //     url: '/api/users',
+    //     method: 'POST',
+    //     data: newUser,
+    //     success: function(data){
+    //       console.log(data);
+
+    //       $('#signup-form')[0].reset();
+    //     }
+    //   });
+    // });
 
     //run page
       toggleForm();

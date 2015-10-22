@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //Get root
 app.get('/', function(req, res){
   db.Post.find({}, function(err, posts){
-    console.log("Posts from db", posts);
+    console.log("Posts from db on home", posts);
     res.render('index', {posts:posts});
   });
 });
@@ -29,7 +29,6 @@ app.get('/api/posts', function(req, res){
   db.Post.find({}, function(err, posts){
     console.log("Posts from db", posts);
     res.json(posts);
-   // res.render('index', {posts:posts});
   });
 });
 
@@ -37,11 +36,7 @@ app.get('/api/posts', function(req, res){
 //POST
 app.post('/api/posts', function(req, res){
   var newPost = req.body;
-  // var newPost = new db.Post(req.body);
-  // newPost.save(function(err, post){
-  //   console.log("new post",post);
-  //   res.json(post);
-  // });
+  
   db.Post.create(newPost, function(err, post){
     res.json(post);
   });
@@ -59,10 +54,9 @@ app.put('/api/posts/:id', function(req, res){
   var postId = req.params.id;
   var updatedPost = req.body;
   updatedPost._id = postId;
-  console.log("the updated ppost", updatedPost);
+  console.log("the updated post", updatedPost);
 
   db.Post.findByIdAndUpdate({_id: postId}, updatedPost, function(err, post){
-    //post = updatedPost;
     db.Post.findOne({_id: post._id}, function(err, updated){ 
      console.log("updated & saved Post is ",updated);
       res.json(updated);
@@ -71,8 +65,16 @@ app.put('/api/posts/:id', function(req, res){
 });
 //GET User
 app.get('/api/users', function(req, res){
-  User.createSecure(req.body.email, req.body.password, function(err, user){
-    res.json(user);
+  db.User.find({}, function(err, users){
+    res.json(users);
+  });
+});
+
+//POST User
+app.post('/api/users', function(req, res){
+  db.User.createSecure(req.body.email, req.body.password, function(err, user){
+    console.log("this is the user:", user);
+    res.redirect('/');
   });
 });
 
@@ -83,15 +85,19 @@ app.get('/login', function(req, res){
 
 //POST Login
 app.post('/login', function(req, res){
- //get req.body
- //check if in the system
- //if success redirect to home
- //if fail stay on login show error message
+   db.User.authenticate(req.body.email, req.body.password, function(err, user){
+    console.log("this user is login",user);
+
+    res.redirect('/');
+   });
+
 });
 
 app.get('/signup', function(req, res){
   res.render('signup');
 });
+
+
 
 
 //listen
