@@ -51,6 +51,13 @@ $(document).ready(function(){
       var $newPost = createPost(post);
       $('.new-post-container span.latest-post').after($newPost);
     }
+    // Add many posts to target container
+    function addPosts(posts){
+      posts.forEach(function(post){
+        var $newPost = createPost(post);
+        $('.new-post-container span.latest-post').after($newPost);
+      });
+    }
 
     //Create new Post from post object
     function createPost(post){
@@ -157,6 +164,7 @@ $(document).ready(function(){
 
     //run page
       toggleForm();
+
   }
 
   //set up page

@@ -19,12 +19,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //Routes
 //Get root
 app.get('/', function(req, res){
+  res.render('index',);
+});
+//GET Post
+app.get('/api/posts', function(req, res){
   db.Post.find({}, function(err, posts){
     console.log("Posts from db", posts);
-    res.render('index', {posts:posts});
+    //res.json(posts);
+   // res.render('index', {posts:posts});
   });
 });
-
 
 
 //POST
