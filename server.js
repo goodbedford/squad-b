@@ -5,6 +5,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var db = require('./models/index.js');
+
 //connect db
 mongoose.connect("mongodb://localhost/squad");
 
@@ -13,7 +14,7 @@ app.use(express.static('public'));
 //views
 app.set('view engine', 'ejs');
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true })); 
 
 //Routes
 //Get root
@@ -23,6 +24,9 @@ app.get('/', function(req, res){
     res.render('index', {posts:posts});
   });
 });
+
+
+
 //POST
 app.post('/api/posts', function(req, res){
   var newPost = req.body;
@@ -57,8 +61,32 @@ app.put('/api/posts/:id', function(req, res){
       res.json(updated);
     });
   });
-
 });
+//GET User
+app.get('/api/users', function(req, res){
+  User.createSecure(req.body.email, req.body.password, function(err, user){
+    res.json(user);
+  });
+});
+
+//GET Login
+app.get('/login', function(req, res){
+ res.render('login');
+});
+
+//POST Login
+app.post('/login', function(req, res){
+ //get req.body
+ //check if in the system
+ //if success redirect to home
+ //if fail stay on login show error message
+});
+
+app.get('/signup', function(req, res){
+  res.render('signup');
+});
+
+
 //listen
 app.listen(3000, function(){
   console.log("Lets get it started in here, port 3000");

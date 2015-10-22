@@ -75,7 +75,7 @@ $(document).ready(function(){
       $editForm.find('div').eq(1).append('<input type="text" class="form-control edit-content" name="content" placeholder="Input Post">');
       $editForm.append($('<div class="form-group">').append($('<label for="author">Author</label>') ) );
       $editForm.find('div').eq(2).append('<input type="text" class="form-control edit-author" name="author" placeholder="Input Author">');
-      $editForm.append( $('<button type="submit" class="btn btn-primary">Submit</button>'))
+      $editForm.append( $('<button type="submit" class="btn btn-primary">Submit</button>'));
 
       $newPost.append($editForm);
 
