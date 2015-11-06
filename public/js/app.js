@@ -3,7 +3,7 @@ $(document).ready(function(){
   function startApp(){
     //client
     console.log("We out here, client side");
-
+    //showCurrentUser();
     //Toggle Form Open Close
     function toggleForm() {
       $('#form-toggle').on("click", function(e){
@@ -23,6 +23,22 @@ $(document).ready(function(){
           }
       });
     }
+    //Show current log in
+    function showCurrentUser(){
+      $.ajax({
+        url: '/api/users/current',
+        method: 'GET',
+        success: function(user){
+          if(user){
+            //$('a.logged-in').toggleClass('hidden');
+            $('span.current-user').text(user.email + " is logged in");
+          } else{
+           $('span.current-user').text("Please log in"); 
+          }
+        }
+      });
+    }
+
     // Toggle Edit Form open close
     function toggleEditForm( postId){
       var $editForm = $('form[data-index="post'+ postId + '"]');
@@ -120,6 +136,11 @@ $(document).ready(function(){
           addPost(data);
           $('#post-form')[0].reset();
           $('#form-toggle').trigger('click');
+        },
+        error: function(xhr, status, error){
+          console.log(xhr);
+          console.log(status);
+          console.log(error);  
         }
       });
     });

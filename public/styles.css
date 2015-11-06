@@ -8,20 +8,32 @@ body{
 }
 
 /* colors */
-.prime-color { color: #666666;}
-.secondary-color { color: #408000;}
-.alt-color-01 { color: #00FF80;}
-.alt-color-02 { color: #FF0080;}
-.alt-color-03 { color: #008080;}
-.alt-color-03bg { background-color: #008080}
+.prime-color { color: #666666;} /* gray */
+.prime-colorbg { background-color: #666666;} /* gray */
+.secondary-color { color: #408000;} /* dark green */
+.secondary-colorbg { background-color: #408000;} /* dark green */
+.alt-color-01 { color: #00FF80;} /* lime green */
+.alt-color-01bg { background-color: #00FF80;} /* lime green */
+.alt-color-02 { color: #FF0080;} /* pink */
+.alt-color-02bg { background-color: #FF0080;} /* pink */
+.alt-color-03 { color: #008080;} /* teal */
+.alt-color-03bg { background-color: #008080} /* teal */
 .white{color:white;}
 
 
 
 .bdr-bottom{ border-bottom: 1px solid gray}
-
+.btn-padding-lg {
+  padding: 1em;
+}
 .cursor{
   cursor: pointer;
+}
+.current-user{
+  color: #FF0080 ;
+}
+.error{
+  color: red;
 }
 .icon-sizer-down{
   font-size: 1.5em;
@@ -35,7 +47,9 @@ body{
   top: .15em;
   left: .20em;
 }
-
+.nav-margin-sm{
+  margin-left: 1.5em;
+}
 .pad-2px{ padding: 2px;}
 .post-author{ padding-right: 3px;}
 /*.fa{border: 1px solid red;}*/

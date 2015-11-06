@@ -5,17 +5,24 @@
     
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="text" class="form-control" id="email" name="email" placeholder="Input Email">
-      </div>
-      <div class="form-group">
-        <label for="emailMatch">Email</label>
-        <input type="text" class="form-control" id="emailMatch" placeholder="Email Confirmation">
+        <input type="email" class="form-control" id="email" name="email" placeholder="Input Email" autofocus>
       </div>
       <div class="form-group">
         <label for="password">Password</label>
         <input type="text" class="form-control" id="password" name="password" placeholder="Input Password">
       </div>
+      <div class="form-group">
+        <label for="passwordMatch">Password</label>
+        <input type="text" class="form-control" id="passwordMatch" name="passwordMatch" placeholder="Password Confirmation">
+        <% if(flash.err !== null){ %>
+        <label class="error"><%= flash.err.errmsg %></label>
+        <% flash.err = {}%>
+        <% } %>
+      </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    <div class="text-center alt-color-01bg">
+      <a href='/login' class="/login"><div class="btn-padding-lg">Already registered? Login in here</div></a>
+    </div>
   </div>
 </div>
