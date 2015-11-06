@@ -14,10 +14,7 @@
       <div class="form-group">
         <label for="passwordMatch">Password</label>
         <input type="text" class="form-control" id="passwordMatch" name="passwordMatch" placeholder="Password Confirmation">
-        <% if(flash.err !== null){ %>
-        <label class="error"><%= flash.err.errmsg %></label>
-        <% flash.err = {}%>
-        <% } %>
+
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>

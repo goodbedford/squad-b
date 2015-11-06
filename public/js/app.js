@@ -120,6 +120,20 @@ $(document).ready(function(){
             $oldPost.find('p span.edit-post').trigger('click');
            $oldPost.replaceWith(newPost[0] );
     }
+    //add error
+    function addError(error){
+      if( $('.error-container')){
+        console.log("has error container");
+        $('.error-container').empty();
+      }
+   
+      var $errorContainer = $('<div class="container error-container">');
+      var $errorRow = $('<div class="row">');
+      var $errorMsg = $('<div id="flashErrorMsg" class="col-xs-12 error text-center">');  
+      $errorMsg.text(error);
+      $errorContainer.append($errorRow.append($errorMsg));
+      $('#header').after($errorContainer);
+    }
 
 
     //Submit form
@@ -140,7 +154,10 @@ $(document).ready(function(){
         error: function(xhr, status, error){
           console.log(xhr);
           console.log(status);
-          console.log(error);  
+          console.log(error); 
+          addError(xhr.responseText);
+          $('#post-form')[0].reset();
+          $('#form-toggle').trigger('click'); 
         }
       });
     });

@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 var db = require('./models/index.js');
 var session = require('express-session');
 var path = require('path');
+var flash = require('connect-flash');
 
 //connect db
 mongoose.connect("mongodb://localhost/squad");
@@ -24,6 +25,9 @@ app.use(session({
   secret: "SuperGoodBedford",
   cookie: {maxAge: (1000 * 60 * 2)} //2hours
 }));
+//Session Flash Message
+app.use(flash());
+
 //mangage session
 app.use('/', function(req, res, next){
   //saves userId in session for login in user
@@ -48,29 +52,9 @@ app.use('/', function(req, res, next){
     req.user = null;
   };
 
-  req.flash = function(err){
-    console.log("err in flash:", err);
-    res.locals.flash = {};
-    res.locals.flash.err = err;
-    console.log("locals.flash:", res.locals.flash);
-  };
 
   next();
 });
-
-//Error handling
-app.use(errorHandler);
-
-function errorHandler(err, req, res, next){
-  console.log("goodbed");
-  if (res.headersSent){
-
-  }
-  console.error(err.stack);
-  res.status(500);
-  res.render('signup', {error:err});
-  //next(err);
-}
 
 
 //Routes
@@ -105,7 +89,7 @@ app.post('/api/posts', function(req, res){
       });
     }else{
       console.log("You are not login in");
-      res.json(err);
+      res.status(403).json(err);
     }
   }); 
 
@@ -154,10 +138,8 @@ app.post('/api/users', function(req, res, next){
     //console.log("the err:", err.message);
     if(err){
       console.log("some error");
-      req.session.err = {errmsg: "Email is already registered."};
-      //console.log(req.session.err);
-      //pass err to global flash obj
-      //req.flash(req.session.err);
+      //Add Flash Error Message
+      req.flash('flash', "Email is already registered." );
       res.redirect('/signup');
       return;
     }else{
@@ -185,16 +167,8 @@ app.post('/login', function(req, res){
 });
 // get signup page
 app.get('/signup', function(req, res){
-  if(req.session.err){
-    console.log("running error script");
-    req.flash(req.session.err);
-    res.render('signup',{user:null});
-    req.session.err = null;
-    req.flash(req.session.err);
-    return;
-  }
   console.log("signup no error");
-  res.render('signup',{user:null, flash:{err:null}});
+  res.render('signup',{user:null, flash:req.flash('flash') });
 });
 
 //get logout User

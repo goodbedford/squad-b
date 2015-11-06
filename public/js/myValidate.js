@@ -18,6 +18,7 @@ $("#login-form").validate({
     }
   }
 });
+
 $("#signup-form").validate({
   rules:{
     email: {

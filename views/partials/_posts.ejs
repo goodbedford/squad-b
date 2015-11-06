@@ -4,7 +4,11 @@
 </div>
 <div class="row">
   <div>
-    <div id="form-toggle" class="alt-color-02 cursor"><span>Add New Post</span><span id="" class="icon-sizer-right form-toggle-right"><i class="fa fa-caret-right"></i></span></div>
+    <% if(!user){  %>
+      <a href="/login"><span class="">Please Login to Post</span></a>
+    <%} else{%>
+      <div id="form-toggle" class="alt-color-02 cursor"><span>Add New Post</span><span id="" class="icon-sizer-right form-toggle-right"><i class="fa fa-caret-right"></i></span></div>
+    <%}%>
     <form id="post-form" action="/api/posts" method="POST" role="form" class="hidden">
 <!--       <legend>Add New Post</legend>
  -->    
@@ -34,8 +38,11 @@
            <p class="post-content"><%= posts[i-1].content %></p>
            <p class="post-footer">
             <small class="alt-color-02 post-author"><%= posts[i-1].author %></small>
+            <!-- only show edit if logged in -->
+            <% if(user){  %>
             <span data-index="<%= posts[(i-1)]._id %>" class="edit-post cursor pad-2px"><i class="fa fa-pencil"></i></span>
             <span data-index="<%= posts[(i-1)]._id %>" class="delete-post cursor pad-2px"><i class="fa fa-trash-o"></i></span>
+           <%}%>
            </p>
           <!-- Edit Form --> 
           <form data-index="post<%= posts[(i-1)]._id %>" action="/api/posts/:id" method="PUT" role="form" class="hidden edit-form">   
