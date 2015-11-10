@@ -51,8 +51,6 @@ app.use('/', function(req, res, next){
     req.session.userId = null;
     req.user = null;
   };
-
-
   next();
 });
 
@@ -62,17 +60,29 @@ app.use('/', function(req, res, next){
 app.get('/', function(req, res){
     req.currentUser(function(err,currentUser){
       var user = currentUser || null;
-      db.Post.find({}, function(err, posts){
-        //console.log("Posts from db on home", posts);
-        res.render('index', {posts:posts, user:user});
-      });
+      db.Post.find({})
+        .populate('author')
+        .exec(function(err, posts){
+          // console.log("Posts from db on home", posts);
+          res.render('index', {posts:posts, user:user});
+        });
     });
 });
 //GET Post
 app.get('/api/posts', function(req, res){
-  db.Post.find({}, function(err, posts){
-    console.log("Posts from db", posts);
-    res.json(posts);
+  req.currentUser(function(err, currentUser){
+    var user = currentUser || null;
+    if(user){
+      db.Post.find({})
+        .populate('author')
+        .exec(function(err, posts){
+          // console.log("Posts from db on home", posts);
+          res.render('index', {posts:posts, user:user});
+        });
+    } else {
+      console.log("Could not get posts.");
+      res.render('index', {posts:posts, user:user});
+    }
   });
 });
 
@@ -85,41 +95,129 @@ app.post('/api/posts', function(req, res){
     if (user){
       console.log("this a login in user", user);
       db.Post.create(newPost, function(err, post){
-        res.json(post);
+        if(err){
+          console.log("Error while posting");
+          error = 'Error while posting.';
+          res.status(404).json(error);
+          return;
+        }
+        db.Post.findOne({_id: post._id})
+          .populate('author')
+          .exec(function(err,post){
+            if(err){
+              console.log("Error while posting");
+              res.status(404).json(err);
+              return;
+            }
+            console.log("success created post");
+            res.json(post); 
+          });
       });
     }else{
-      console.log("You are not login in");
-      res.status(403).json(err);
+      console.log("Need to login to post.");
+      res.status(400).json(err);
+    }
+  }); 
+
+});
+//POST post2
+app.post('/posts2', function(req, res){
+  var newPost = req.body;
+
+  req.currentUser(function(err, currentUser){
+    var user = currentUser || null;
+
+    if (user){
+      console.log("this a login in user", user);
+      db.Post.create(newPost, function(err, post){
+        if(err){
+          console.log("Error while posting");
+          error = 'Error while posting.';
+          //res.status(404).json(error);
+          return;
+        }
+        db.Post.find({})
+          .populate('author')
+          .exec(function(err,posts){
+            if(err){
+              console.log("Error while posting");
+              //res.status(404).json(err);
+              return;
+            }
+            console.log("success created post");
+            res.render('index', {posts:posts, user:user});
+            // res.json(post); 
+          });
+      });
+    }else{
+      console.log("Need to login to post.");
+      //res.status(400).json(err);
     }
   }); 
 
 });
 //DELETE
 app.delete('/api/posts/:id', function(req, res){
-  var postId = req.params.id;
-  db.Post.findOneAndRemove({_id: postId}, function(err, deletedPost){
-    console.log("Deleted post id", postId);
-    res.json(postId);
+  req.currentUser(function(err,currentUser){
+    if(currentUser){
+      var postId = req.params.id;
+      db.Post.findOneAndRemove({_id: postId}, function(err, deletedPost){
+        console.log("Deleted post id", postId);
+        res.json(postId);
+      });
+    } else {
+      console.log("You don't have the correct permissions.");
+      res.status(403).json(err);
+    }
   });
 });
-//PUT Post
-app.put('/api/posts/:id', function(req, res){
-  var postId = req.params.id;
-  var updatedPost = req.body;
-  updatedPost._id = postId;
-  console.log("the updated post", updatedPost);
-
-  db.Post.findByIdAndUpdate({_id: postId}, updatedPost, function(err, post){
-    db.Post.findOne({_id: post._id}, function(err, updated){ 
-     console.log("updated & saved Post is ",updated);
-      res.json(updated);
-    });
+//Update post by  method post instead of put
+app.post('/posts/:id', function(req, res){
+  req.currentUser(function(err,currentUser){
+    var user = currentUser || null;
+    if(user){
+      var postId = req.params.id;
+      //console.log("req.params.id:", req.params.id);
+      var updatedPost = req.body;
+      updatedPost._id = postId;
+      //console.log("the post to be updated with", updatedPost);
+      db.Post.findByIdAndUpdate({_id: postId}, updatedPost, function(err, post){
+        console.log("the updated post1:", post);
+        if( post.author !== user._id){
+          console.log("Current user does not have permissons to edit");
+          res.redirect('/');
+          return;
+        }
+        db.Post.find({})
+          .populate('author')
+          .exec(function(err, posts){ 
+            if(err){
+              console.log("Error while updating post");
+              //res.status(404).json(err);
+              return;
+            }
+            console.log("success updated post");
+            res.redirect('/');
+            //res.render('index', {posts:posts, user:user});
+          });
+      });
+    } else {
+      console.log("error updating.");
+    }
+            //console.log("updated & saved Post is ",posts);
+          // res.json(updated);
   });
 });
 //GET User
 app.get('/api/users', function(req, res){
-  db.User.find({}, function(err, users){
-    res.json(users);
+  req.currentUser(function(err, currentUser){
+    if(currentUser){
+      db.User.find({}, function(err, users){
+        res.json(users);
+      });
+    } else {
+      res.status(403).json("You don't have correct permissions.");
+    }
   });
 });
 //GET current User
@@ -138,7 +236,7 @@ app.post('/api/users', function(req, res, next){
     //console.log("the err:", err.message);
     if(err){
       console.log("some error");
-      //Add Flash Error Message
+      //Add Flash Middleware Error Message
       req.flash('flash', "Email is already registered." );
       res.redirect('/signup');
       return;
@@ -148,6 +246,21 @@ app.post('/api/users', function(req, res, next){
       res.redirect('/');
     }
   });
+});
+
+//Get Guest user
+app.get('/login/guest', function(req, res){
+  var guest = {
+        email: "bob@gmail.com",
+        password: "bob"
+  };
+  db.User.authenticate(guest.email, guest.password, function(err, user){
+   console.log("this user is login",user);
+   //start session
+   req.login(user); 
+   res.redirect('/'); 
+  });
+
 });
 
 //GET Login

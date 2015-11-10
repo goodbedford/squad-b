@@ -9,9 +9,7 @@
     <%} else{%>
       <div id="form-toggle" class="alt-color-02 cursor"><span>Add New Post</span><span id="" class="icon-sizer-right form-toggle-right"><i class="fa fa-caret-right"></i></span></div>
     <%}%>
-    <form id="post-form" action="/api/posts" method="POST" role="form" class="hidden">
-<!--       <legend>Add New Post</legend>
- -->    
+    <form id="post-form" action="/posts2" method="POST" role="form" class="hidden">  
       <div class="form-group">
         <label for="">Title</label>
         <input type="text" class="form-control" id="post-title" name="title" placeholder="Input Title" autofocus> 
@@ -22,7 +20,10 @@
       </div>
       <div class="form-group">
         <label for="">Author</label>
-        <input type="text" class="form-control" id="post-author" name="author" placeholder="Input Author">
+        <% if(user) {%>
+        <input type="hidden" class="form-control" id="post-author" name="author" placeholder="" value="<%=user._id %>" >
+        <input type="text" class="form-control" id="p-author" name="p-author" placeholder="" value="<%=user.email%>" disabled>
+        <%}%>
       </div> 
       
     
@@ -37,15 +38,18 @@
            <p class="secondary-color post-title"><%= posts[i-1].title %></p>
            <p class="post-content"><%= posts[i-1].content %></p>
            <p class="post-footer">
-            <small class="alt-color-02 post-author"><%= posts[i-1].author %></small>
+            <small class="alt-color-02 post-author"><%= posts[i-1].author.email %></small>
             <!-- only show edit if logged in -->
-            <% if(user){  %>
+
+           <% if(user) { %>
+           <% if ( user._id.toString() === posts[i-1].author._id.toString() ){%>
             <span data-index="<%= posts[(i-1)]._id %>" class="edit-post cursor pad-2px"><i class="fa fa-pencil"></i></span>
             <span data-index="<%= posts[(i-1)]._id %>" class="delete-post cursor pad-2px"><i class="fa fa-trash-o"></i></span>
            <%}%>
+           <% }  %>
            </p>
           <!-- Edit Form --> 
-          <form data-index="post<%= posts[(i-1)]._id %>" action="/api/posts/:id" method="PUT" role="form" class="hidden edit-form">   
+          <form data-index="post<%= posts[(i-1)]._id %>" action="/posts/<%= posts[(i-1)]._id %>" method="post" role="form" class="hidden edit-form">   
                <div class="form-group">
                  <label for="">Title</label>
                  <input type="text" class="form-control edit-title" id="" name="title" placeholder="Input Title" autofocus> 
@@ -56,12 +60,12 @@
                </div>
                <div class="form-group">
                  <label for="">Author</label>
-                 <input type="text" class="form-control edit-author" id="" name="author" placeholder="Input Author">
+                 <input type="hidden" class="form-control e-author" id="" name="author" placeholder="" value="<%= posts[(i-1)].author._id %>">
+                 <input type="text" class="form-control edit-author" id="" name="" placeholder="Input Author" value="<%= posts[(i-1)].author.email %>" disabled>
                </div> 
                <button type="submit" class="btn btn-primary">Submit</button>
           </form>
        </div>
-
       <% } %>
       </div>
 </div>

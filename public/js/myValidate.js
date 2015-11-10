@@ -44,3 +44,51 @@ $("#signup-form").validate({
     }
   }
 });
+$("#post-form").validate({
+  rules:{
+    title: {
+      required: true
+    },
+    author:{
+      required: true
+    },
+    content:{
+      required: true
+    } 
+  },
+  messages: {
+    title:{
+      required: "Title is required."
+    },
+    content:{
+      required: "Content is required."
+    },
+    author:{
+      required: "Author is required."
+    }
+  }
+});
+$(".edit-form").validate({
+  rules:{
+    title: {
+      required: true
+    },
+    author:{
+      required: true
+    },
+    content:{
+      required: true
+    } 
+  },
+  messages: {
+    title:{
+      required: "Title is required."
+    },
+    content:{
+      required: "Content is required."
+    },
+    author:{
+      required: "Author is required."
+    }
+  }
+});

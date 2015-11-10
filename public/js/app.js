@@ -43,6 +43,7 @@ $(document).ready(function(){
     function toggleEditForm( postId){
       var $editForm = $('form[data-index="post'+ postId + '"]');
       console.log($editForm);
+
         $editForm.toggleClass('hidden');
     }
     // Populate Edit Form with selected post
@@ -86,18 +87,20 @@ $(document).ready(function(){
       $newPost.append($('<p class="secondary-color post-title">').text(post.title) );
       $newPost.append( $('<p class="post-content">').text(post.content) );
       $newPost.append($('<p class="post-footer"> <small class="alt-color-02 post-author"></small></p>'));
-      $newPost.find('small').text(post.author);
+      $newPost.find('small').text(post.author.email);
       $newPost.find('.post-footer').append($iconEdit);
       $newPost.find('.post-footer').append($iconDel);
 
       //create edit form
-      var $editForm = $('<form data-index="" action="/api/posts/:id" method="PUT" role="form" class="hidden edit-form">').attr('data-index', 'post' + post._id);
+      var $editForm = $('<form data-index="" action="/api/posts/'+ post._id +'" method="PUT" role="form" class="hidden edit-form">').attr('data-index', 'post' + post._id);
       $editForm.append($('<div class="form-group">').append($('<label for="title">Title</label>') ) );
       $editForm.find('div').eq(0).append('<input type="text" class="form-control edit-title" name="title" placeholder="Input Title" autofocus>');
       $editForm.append($('<div class="form-group">').append($('<label for="content">Post</label>') ) );
       $editForm.find('div').eq(1).append('<input type="text" class="form-control edit-content" name="content" placeholder="Input Post">');
       $editForm.append($('<div class="form-group">').append($('<label for="author">Author</label>') ) );
-      $editForm.find('div').eq(2).append('<input type="text" class="form-control edit-author" name="author" placeholder="Input Author">');
+      $editForm.find('div').eq(2).append('<input type="hidden" class="form-control e-author" name="author" placeholder="Input Author" val='+post.author._id+'>');
+      $editForm.find('div').eq(2).append('<input type="text" class="form-control edit-author" name="" placeholder="Input Author" disabled>');
+
       $editForm.append( $('<button type="submit" class="btn btn-primary">Submit</button>'));
 
       $newPost.append($editForm);
@@ -114,11 +117,11 @@ $(document).ready(function(){
     //Update Post by replacing old post element with new one
     function addUpdatedPost( post){
             var $oldPost = $('div.post[data-index="post'+ post._id + '"]');
-            console.log("add updated post", $oldPost);
+            console.log("add old post", $oldPost.length);
             var newPost = createPost(post);
             console.log(newPost[0]);
+            $oldPost.replaceWith(newPost[0] );
             $oldPost.find('p span.edit-post').trigger('click');
-           $oldPost.replaceWith(newPost[0] );
     }
     //add error
     function addError(error){
@@ -134,33 +137,41 @@ $(document).ready(function(){
       $errorContainer.append($errorRow.append($errorMsg));
       $('#header').after($errorContainer);
     }
-
+    //clear error
+    function clearError(){
+      if( $('.error-container')){
+        console.log("has error container");
+        $('.error-container').empty();
+      } 
+    }
 
     //Submit form
-    $('#post-form').on('submit', function(e){
-      e.preventDefault();
-      console.log("posted");
-      var newPost = $(this).serialize();
-      $.ajax({
-        url: '/api/posts',
-        method: 'POST',
-        data: newPost,
-        success: function(data){
-          console.log(data);
-          addPost(data);
-          $('#post-form')[0].reset();
-          $('#form-toggle').trigger('click');
-        },
-        error: function(xhr, status, error){
-          console.log(xhr);
-          console.log(status);
-          console.log(error); 
-          addError(xhr.responseText);
-          $('#post-form')[0].reset();
-          $('#form-toggle').trigger('click'); 
-        }
-      });
-    });
+    // $('#post-form').on('submit', function(e){
+    //   e.preventDefault();
+    //   console.log("posted");
+    //   var newPost = $(this).serialize();
+    //   console.log("the new post:",newPost);
+    //   $.ajax({
+    //     url: '/api/posts',
+    //     method: 'POST',
+    //     data: newPost,
+    //     success: function(data){
+    //       console.log(data);
+    //       clearError();
+    //       addPost(data);
+    //       $('#post-form')[0].reset();
+    //       $('#form-toggle').trigger('click');
+    //     },
+    //     error: function(xhr, status, error){
+    //       console.log(xhr);
+    //       console.log(status);
+    //       console.log(error); 
+    //       addError(xhr.responseText);
+    //       $('#post-form')[0].reset();
+    //       //$('#form-toggle').trigger('click'); 
+    //     }
+    //   });
+    // });
 
     //Delete Post
     $('.new-post-container').on('click', 'span.delete-post', function(){
@@ -183,22 +194,23 @@ $(document).ready(function(){
        populateForm(postId);
     });
     
-    //Submit Edit Form
-    $('.new-post-container').on('submit', 'form.edit-form', function(e){
-        e.preventDefault();
-       var postId = $(this).attr("data-index").replace(/post/, "");
-       var updatedPost = $(this).serialize();
-       console.log("the edit submit id",updatedPost);
-       $.ajax({
-        url: '/api/posts/' + postId,
-        method: 'PUT',
-        data: updatedPost,
-        success: function(updated){
-          console.log('this was edited', updated);
-          addUpdatedPost(updated);
-        }
-       });
-    });
+    // //Submit Edit Form
+    // $('.new-post-container').on('submit', 'form.edit-form', function(e){
+    //     e.preventDefault();
+    //     console.log("submit fired");
+    //    var postId = $(this).attr("data-index").replace(/post/, "");
+    //    var updatedPost = $(this).serialize();
+    //    console.log("the edit submit id",updatedPost);
+    //    $.ajax({
+    //     url: '/api/posts/' + postId,
+    //     method: 'PUT',
+    //     data: updatedPost,
+    //     success: function(updated){
+    //       console.log('this was edited', updated);
+    //       addUpdatedPost(updated);
+    //     }
+    //    });
+    // });
     //Submit Signup form
     // $('#signup-form').on('submit', function(e){
     //   e.preventDefault();
