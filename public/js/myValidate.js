@@ -68,7 +68,9 @@ $("#post-form").validate({
     }
   }
 });
-$(".edit-form").validate({
+
+$("form.edit-form").each(function(){
+  $(this).validate({
   rules:{
     title: {
       required: true
@@ -91,4 +93,30 @@ $(".edit-form").validate({
       required: "Author is required."
     }
   }
+
+  });
 });
+// $("form.edit-form").validate({
+//   rules:{
+//     title: {
+//       required: true
+//     },
+//     author:{
+//       required: true
+//     },
+//     content:{
+//       required: true
+//     } 
+//   },
+//   messages: {
+//     title:{
+//       required: "Title is required."
+//     },
+//     content:{
+//       required: "Content is required."
+//     },
+//     author:{
+//       required: "Author is required."
+//     }
+//   } 
+// });

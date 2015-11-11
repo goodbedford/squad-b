@@ -3,6 +3,11 @@ $(document).ready(function(){
   function startApp(){
     //client
     console.log("We out here, client side");
+
+    $('div.nav-bar-one').one("load", function(){
+      console.log($(this));
+      $(this).addClass("animated fadeIn");
+    });
     //showCurrentUser();
     //Toggle Form Open Close
     function toggleForm() {
